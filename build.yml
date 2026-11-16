@@ -1,4 +1,4 @@
-name: Build iOS 6 Native Apps
+name: Build Spotipod iOS 6 Native App
 
 on:
   push:
@@ -39,26 +39,6 @@ jobs:
           curl -sL https://github.com/theos/sdks/releases/download/master-146e41f/iPhoneOS12.4.sdk.tar.xz | tar -xJvf - -C ~/theos/sdks/
           ls -la ~/theos/sdks/
 
-      - name: Build BruceEmbed App
-        run: |
-          export THEOS=$HOME/theos
-          cd BruceEmbed
-          make clean
-          make
-          mkdir -p ../dist/BruceEmbed.app
-          cp -r .theos/obj/debug/armv7/BruceEmbed.app/* ../dist/BruceEmbed.app/ 2>/dev/null || cp -r .theos/obj/debug/BruceEmbed.app/* ../dist/BruceEmbed.app/ 2>/dev/null || cp -r .theos/obj/BruceEmbed.app/* ../dist/BruceEmbed.app/ 2>/dev/null || true
-          cp Info.plist Icon*.png ../dist/BruceEmbed.app/ 2>/dev/null || true
-
-      - name: Build FlipperEmbed App
-        run: |
-          export THEOS=$HOME/theos
-          cd FlipperEmbed
-          make clean
-          make
-          mkdir -p ../dist/FlipperEmbed.app
-          cp -r .theos/obj/debug/armv7/FlipperEmbed.app/* ../dist/FlipperEmbed.app/ 2>/dev/null || cp -r .theos/obj/debug/FlipperEmbed.app/* ../dist/FlipperEmbed.app/ 2>/dev/null || cp -r .theos/obj/FlipperEmbed.app/* ../dist/FlipperEmbed.app/ 2>/dev/null || true
-          cp Info.plist Icon*.png ../dist/FlipperEmbed.app/ 2>/dev/null || true
-
       - name: Build Nicxker Spotify App
         run: |
           export THEOS=$HOME/theos
@@ -71,14 +51,12 @@ jobs:
 
       - name: Code Sign with ldid
         run: |
-          ldid -S dist/BruceEmbed.app/BruceEmbed || true
-          ldid -S dist/FlipperEmbed.app/FlipperEmbed || true
           ldid -S dist/Nicxker.app/Nicxker || true
           cd dist
-          zip -r ../iOS6_Apps_Compiled.zip BruceEmbed.app FlipperEmbed.app Nicxker.app
+          zip -r ../Nicxker_Spotify_iOS6.zip Nicxker.app
 
       - name: Upload Compiled .app Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: iOS6_Apps
-          path: iOS6_Apps_Compiled.zip
+          name: Nicxker_Spotify_iOS6
+          path: Nicxker_Spotify_iOS6.zip
