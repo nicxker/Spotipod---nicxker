@@ -1,6 +1,7 @@
 // NXSpotifyAPI.m
 #import "NXSpotifyAPI.h"
 #import "NXHTTPClient.h"
+#import "NXSpotifyAuth.h"
 
 #define API @"https://api.spotify.com/v1"
 
@@ -174,4 +175,3 @@
 }
 
 @end
-
