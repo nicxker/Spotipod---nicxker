@@ -1,0 +1,84 @@
+name: Build iOS 6 Native Apps
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential fakeroot perl zip git libtinfo6
+
+      - name: Install Theos & iOS Cross Toolchain
+        run: |
+          echo "Cloning Theos..."
+          git clone --recursive https://github.com/theos/theos.git ~/theos
+          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+          
+          echo "Installing iOS Toolchain..."
+          mkdir -p ~/theos/toolchain
+          curl -sL https://github.com/L1ghtmann/llvm-project/releases/latest/download/iOSToolchain-x86_64.tar.xz | tar -xJvf - -C ~/theos/toolchain/
+          
+          echo "Setting up ldid..."
+          sudo ln -sf ~/theos/toolchain/linux/iphone/bin/ldid /usr/local/bin/ldid
+          ldid || true
+
+      - name: Install iOS 12.4 SDK (armv7 compatible)
+        run: |
+          echo "Installing iOS 12.4 SDK..."
+          mkdir -p ~/theos/sdks
+          curl -sL https://github.com/theos/sdks/releases/download/master-146e41f/iPhoneOS12.4.sdk.tar.xz | tar -xJvf - -C ~/theos/sdks/
+          ls -la ~/theos/sdks/
+
+      - name: Build BruceEmbed App
+        run: |
+          export THEOS=$HOME/theos
+          cd BruceEmbed
+          make clean
+          make
+          mkdir -p ../dist/BruceEmbed.app
+          cp -r .theos/obj/debug/armv7/BruceEmbed.app/* ../dist/BruceEmbed.app/ 2>/dev/null || cp -r .theos/obj/debug/BruceEmbed.app/* ../dist/BruceEmbed.app/ 2>/dev/null || cp -r .theos/obj/BruceEmbed.app/* ../dist/BruceEmbed.app/ 2>/dev/null || true
+          cp Info.plist Icon*.png ../dist/BruceEmbed.app/ 2>/dev/null || true
+
+      - name: Build FlipperEmbed App
+        run: |
+          export THEOS=$HOME/theos
+          cd FlipperEmbed
+          make clean
+          make
+          mkdir -p ../dist/FlipperEmbed.app
+          cp -r .theos/obj/debug/armv7/FlipperEmbed.app/* ../dist/FlipperEmbed.app/ 2>/dev/null || cp -r .theos/obj/debug/FlipperEmbed.app/* ../dist/FlipperEmbed.app/ 2>/dev/null || cp -r .theos/obj/FlipperEmbed.app/* ../dist/FlipperEmbed.app/ 2>/dev/null || true
+          cp Info.plist Icon*.png ../dist/FlipperEmbed.app/ 2>/dev/null || true
+
+      - name: Build Nicxker Spotify App
+        run: |
+          export THEOS=$HOME/theos
+          cd NicxkerSpotify
+          make clean
+          make
+          mkdir -p ../dist/Nicxker.app
+          cp -r .theos/obj/debug/armv7/Nicxker.app/* ../dist/Nicxker.app/ 2>/dev/null || cp -r .theos/obj/debug/Nicxker.app/* ../dist/Nicxker.app/ 2>/dev/null || cp -r .theos/obj/Nicxker.app/* ../dist/Nicxker.app/ 2>/dev/null || true
+          cp Info.plist Icon*.png ../dist/Nicxker.app/ 2>/dev/null || true
+
+      - name: Code Sign with ldid
+        run: |
+          ldid -S dist/BruceEmbed.app/BruceEmbed || true
+          ldid -S dist/FlipperEmbed.app/FlipperEmbed || true
+          ldid -S dist/Nicxker.app/Nicxker || true
+          cd dist
+          zip -r ../iOS6_Apps_Compiled.zip BruceEmbed.app FlipperEmbed.app Nicxker.app
+
+      - name: Upload Compiled .app Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iOS6_Apps
+          path: iOS6_Apps_Compiled.zip
