@@ -99,7 +99,7 @@
     _artistLabel.textColor     = NX_GRAY;
     _artistLabel.font          = [UIFont systemFontOfSize:13];
     _artistLabel.textAlignment = NSTextAlignmentCenter;
-    _artistLabel.text          = @"Open Spotify on PC/Phone";
+    _artistLabel.text          = @"Play music on PC / Phone";
     [self.view addSubview:_artistLabel];
 
     // 3. Seek Bar & Time Labels
@@ -251,7 +251,7 @@
             [_playPauseButton setTitle:@"▶" forState:UIControlStateNormal];
         }];
     } else {
-        [[NXSpotifyAPI shared] resume:^(BOOL ok) {
+        [[NXSpotifyAPI shared] play:nil deviceID:nil completion:^(BOOL ok) {
             _state.isPlaying = YES;
             [_playPauseButton setTitle:@"⏸" forState:UIControlStateNormal];
         }];
@@ -293,7 +293,7 @@
     if (_heartButton.selected) {
         [[NXSpotifyAPI shared] saveTrack:_state.track.trackID completion:nil];
     } else {
-        [[NXSpotifyAPI shared] removeTrack:_state.track.trackID completion:nil];
+        [[NXSpotifyAPI shared] unsaveTrack:_state.track.trackID completion:nil];
     }
 }
 
