@@ -41,6 +41,9 @@ jobs:
 
       - name: Build Nicxker Spotify App
         run: |
+          # Sincronizar automáticamente cualquier archivo corregido de la raíz a src
+          cp -f *.h *.m NicxkerSpotify/src/ 2>/dev/null || true
+          
           export THEOS=$HOME/theos
           cd NicxkerSpotify
           make clean
