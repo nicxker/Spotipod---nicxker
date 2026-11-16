@@ -11,10 +11,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    // Dark tab bar
-    self.tabBar.barStyle = UIBarStyleBlack;
-    self.tabBar.translucent = NO;
-    self.tabBar.tintColor = [UIColor colorWithRed:0.11 green:0.73 blue:0.33 alpha:1];
+    // Compatible con la barra de iOS 6
+    if ([self.tabBar respondsToSelector:@selector(setSelectedImageTintColor:)]) {
+        self.tabBar.selectedImageTintColor = [UIColor colorWithRed:0.11 green:0.73 blue:0.33 alpha:1];
+    }
 
     NXPlayerViewController  *player  = [[NXPlayerViewController alloc] init];
     NXSearchViewController  *search  = [[NXSearchViewController alloc] init];
@@ -41,4 +41,3 @@
 }
 
 @end
-
