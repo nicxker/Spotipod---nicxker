@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>nicxker</string>
+    <key>CFBundleDisplayName</key>
+    <string>nicxker</string>
+    <key>CFBundleIdentifier</key>
+    <string>de.nicxker.spotify</string>
+    <key>CFBundleVersion</key>
+    <string>1.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>CFBundleExecutable</key>
+    <string>Nicxker</string>
+    <key>CFBundleIconFiles</key>
+    <array>
+        <string>Icon.png</string>
+        <string>Icon@2x.png</string>
+    </array>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>MinimumOSVersion</key>
+    <string>5.0</string>
+    <key>UIRequiredDeviceCapabilities</key>
+    <array>
+        <string>armv7</string>
+    </array>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+    </array>
+    <!-- Spotify OAuth callback URL scheme -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>nicxker</string>
+            </array>
+        </dict>
+    </array>
+    <!-- Performance: disable unnecessary features -->
+    <key>UIApplicationExitsOnSuspend</key>
+    <false/>
+    <key>UIStatusBarStyle</key>
+    <string>UIStatusBarStyleBlackOpaque</string>
+</dict>
+</plist>
+
